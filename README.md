@@ -5,7 +5,7 @@ File Stream Handling is a project to control file uploading and downloading whic
 - NodeJS + ExpressJS
 - ReactJS
 - Socket.io
-- fs
+- file-handling (using fs module)
 
 ## Note:
 -This Project is a continuation of an Industrial task by [Altan](https://atlan.com/).<br>
