@@ -9,15 +9,16 @@ var cors = require('cors')
 var app = express();
 
 var port = process.env.PORT || 2020;
-const server = app.listen(port, () => {
-  console.log("Listening on port: " + port);
+var host = '0.0.0.0'
+const server = app.listen(port, host, () => {
+  console.log(`Listening on: http://${host}:${port}`);
 });
 io = socketio(server, { origins: '*:*' })
 app.use(cors())
 app.use(express.static(path.join(__dirname, "../build")));
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
+  res.header("Access-Control-Allow-Origin", "http://0.0.0.0:3000/");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });

@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client'
 
 function App() {
-  // const ENDPOINT = 'http://localhost:2020/'
+  const ENDPOINT = 'http://0.0.0.0:2020/'
   const [SelectedFile, setSelectedFile] = useState('')
   const [isFile, setisFile] = useState(false)
   const [uploading, setUploading] = useState(false)
-  // const [pause, setPause] = useState(false)
 
   var fRead; var fname;
 
