@@ -35,9 +35,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var Files = {};
 
-app.get('/', (req, res) => {
+app.get('/files', (req, res) => {
+  fs.readdir('src/Collection', (err, data) => {
+    if (err) console.log(err)
+    else
+      res.json(data)
+  })
+});
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
 
 /////// Algorithm /////////
 
@@ -78,14 +86,14 @@ io.on('connect', (socket) => {
     {
       fs.write(Files.Name.Handler, Files.Name.Data, null, 'Binary', function (err, Writen) {
         var input = fs.createReadStream(path.join(__dirname, 'Dummy/') + Name);
-        var output = fs.createWriteStream(path.join(__dirname, 'Collection') + Name);
+        var output = fs.createWriteStream(path.join(__dirname, 'Collection/') + Name);
         input.pipe(output);
 
         input.on("end", function () {
           console.log("end");
           fs.unlink(path.join(__dirname, 'Dummy/') + Name, () => { //This Deletes The Temporary File
             console.log("unlink this file:", Name);
-            socket.emit('Done', { status: 'uploaded'});
+            socket.emit('Done', { status: 'uploaded' });
           });
         });
       });
@@ -107,8 +115,8 @@ io.on('connect', (socket) => {
 
   socket.on('TerminateUpload', (data) => {
     var Name = data.Name
-    fs.unlink(path.join(__dirname, 'Dummy/')+Name, () => {
-      socket.emit('Done', { status: 'terminated'});
+    fs.unlink(path.join(__dirname, 'Dummy/') + Name, () => {
+      socket.emit('Done', { status: 'terminated' });
     })
   })
 })

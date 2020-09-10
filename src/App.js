@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client'
+import axios from 'axios'
 
 function App() {
   const ENDPOINT = 'http://0.0.0.0:2020/'
   const [SelectedFile, setSelectedFile] = useState('')
   const [isFile, setisFile] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [files, setFiles] = useState([])
 
   var fRead; var fname;
 
@@ -16,6 +18,10 @@ function App() {
       "Accept": "application/json",
       "Content-Type": "application/json"
     }
+    axios.get('/files')
+      .then(res => {
+        setFiles(res.data)
+      })
   }, [ENDPOINT, SelectedFile]);
 
   const StartUploading = () => {
@@ -65,7 +71,6 @@ function App() {
       alert('file uploaded Successfully')
     window.location.reload(true);
   })
-
   return (
     <div className="App">
       <h1 style={{ textAlign: 'center' }}>Controlable File Streaming</h1><br />
@@ -95,6 +100,16 @@ function App() {
           }
         </span>
       </div>
+      {(files) &&
+        <div>
+          <h2>Uploaded Files list:</h2><br />
+          <ul>
+            {files.map(function (file, idx) {
+              return <li key={idx}>{file}</li>
+            })}
+          </ul>
+        </div>
+      }
 
       <br /><br /><br />
       <hr />
@@ -120,7 +135,7 @@ function App() {
       <hr />
       <div class="flowchart">
         <h1>Flow Chart:</h1>
-        <div class="mxgraph" style={{maxWidth:'100%'}}>
+        <div class="mxgraph" style={{ maxWidth: '100%' }}>
           <img src="./FileStreamHandling.png" alt="flowchart" />
         </div>
       </div>
