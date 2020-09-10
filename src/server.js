@@ -32,13 +32,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-////////////////
 
 var Files = {};
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
+/////// Algorithm /////////
 
 io.on('connect', (socket) => {
   socket.on('StartUpload', function (data) { //data contains the variables that we passed through in the html file
@@ -53,7 +54,7 @@ io.on('connect', (socket) => {
       var Stat = fs.statSync(path.join(__dirname, 'Dummy/') + Name);
       if (Stat.isFile()) {
         Files.Name.Downloaded = Stat.size;
-        BufPos = Stat.size / 524288;
+        BufPos = Stat.size / 524288; // 0.5MB
       }
     }
     catch (er) { } //It's a New File
@@ -89,16 +90,16 @@ io.on('connect', (socket) => {
         });
       });
     }
-    else if (Files.Name.Data.length > 5000000) { //If the Data Buffer reaches 10MB
+    else if (Files.Name.Data.length > 5242880) { //If the Data of Buffer reaches 5MB
       fs.write(Files.Name.Handler, Files.Name.Data, null, 'Binary', function (err, Writen) {
         Files.Name.Data = ""; //Reset The Buffer
-        var BufPos = Files.Name.Downloaded / 500000;
+        var BufPos = Files.Name.Downloaded / 524288;
         var Percent = (Files.Name.Downloaded / Files.Name.FileSize) * 100;
         socket.emit('DataFeedback', { 'BufPos': BufPos, 'Percent': Percent });
       });
     }
     else {
-      var BufPos = Files.Name.Downloaded / 500000;
+      var BufPos = Files.Name.Downloaded / 524288;
       var Percent = (Files.Name.Downloaded / Files.Name.FileSize) * 100;
       socket.emit('DataFeedback', { 'BufPos': BufPos, 'Percent': Percent });
     }

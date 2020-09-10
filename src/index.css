@@ -1,8 +1,7 @@
 body {
   text-align: center;
-  background-color: rgb(0, 16, 39);
+  background-color: rgb(10, 0, 32);
   color: white;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 #UploadCont {
@@ -16,12 +15,22 @@ body {
   overflow: hidden;
 }
 
+.App{
+  position: relative;
+  margin: 0px 100px;
+  text-align: justify;
+}
+
 #FileCont {
   margin: 1%;
 }
 
-h1 {
+h1, h2 {
   color: rgb(0, 247, 255);
+}
+
+ul {
+  text-align: justify;
 }
 
 button {
@@ -34,4 +43,10 @@ button {
 
 #percent {
   color: greenyellow;
+}
+
+.flowchart {
+    position: relative;
+    left: 50%;
+    transform: translate(-25%)
 }

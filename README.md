@@ -12,3 +12,8 @@ File Stream Handling is a project to control file uploading and downloading whic
 -There now flow of Database throughout the project. Everything is running on Server Locally (for the time being).<br>
 -Future updated will include a lot of stuffs like uploading data into Database (MongoDB), use of GridFS to create small buffers of a single large file,
 importable NPM package module, etc.<br>
+
+## Flow Chart:
+
+![FileStreamHandling](https://user-images.githubusercontent.com/32240906/92709307-6dac8480-f374-11ea-8ccb-c357327420b9.png)
+

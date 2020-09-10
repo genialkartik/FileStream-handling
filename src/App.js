@@ -18,7 +18,7 @@ function App() {
     }
   }, [ENDPOINT, SelectedFile]);
 
-  const StartUpload = () => {
+  const StartUploading = () => {
     if (SelectedFile !== '') {
       fRead = new FileReader()
       fname = SelectedFile.name;
@@ -35,15 +35,15 @@ function App() {
 
   socket.on('DataFeedback', (data) => {
     UpdateBar(data.Percent)
-    var BufPos = data.BufPos * 500000
+    var BufPos = data.BufPos * 524288
     var NewFile;
-    NewFile = SelectedFile.slice(BufPos, BufPos + Math.min(500000, (SelectedFile.size - BufPos)));
+    NewFile = SelectedFile.slice(BufPos, BufPos + Math.min(524288, (SelectedFile.size - BufPos)));
     fRead.readAsBinaryString(NewFile);
   })
 
   const UpdateBar = (percent) => {
     document.querySelector('#percent').innerHTML = (Math.round(percent * 100) / 100) + '%';
-    var MBDone = Math.round(((percent / 100.0) * SelectedFile.size) / 1000000); // 1MB
+    var MBDone = Math.round(((percent / 100.0) * SelectedFile.size) / 1048576); // 1MB
     document.querySelector('#MB').innerHTML = MBDone;
   }
 
@@ -68,32 +68,61 @@ function App() {
 
   return (
     <div className="App">
-      <h1>File Streaming Control</h1>
+      <h1 style={{ textAlign: 'center' }}>Controlable File Streaming</h1><br />
       <div id="UploadCont">
         <span id='UploadArea'>
           {(uploading) ?
             <div>
               <h3 id='NameCont'>Uploading {SelectedFile.name}</h3><br /><br />
               <div id="ProgressContainer"></div><b id="percent"></b><br />
-              <span id='Uploaded'><span id='MB'></span> / {SelectedFile.size / 100000} MB</span><br /><br />
+              <span id='Uploaded'><span id='MB'></span> / {SelectedFile.size / 1048576} MB</span><br /><br />
               <button type='button' onClick={pauseUpload} id='PauseButton' className='PauseButton'>Pause</button>
             </div> :
             <div>
               {(isFile) ?
                 <div>
                   <h3 id='NameCont'>Uploading {SelectedFile.name}</h3><br /><br />
-                  <button type='button' onClick={StartUpload} id='UploadButton' className='Button'>Resume</button><br /><br />
+                  <button type='button' onClick={StartUploading} id='UploadButton' className='Button'>Resume</button><br /><br />
                   <button type='button' onClick={TerminateUpload} id='TerminateButton' className='Button'>Terminate</button>
                 </div> :
                 <div>
                   <label htmlFor="FileCont">Choose A File: </label>
                   <input type="file" id="FileCont" onChange={(e) => (setSelectedFile(e.target.files[0]))} /><br /><br />
-                  <button type='button' onClick={StartUpload} id='UploadButton' className='Button'>Upload</button>
+                  <button type='button' onClick={StartUploading} id='UploadButton' className='Button'>Upload</button>
                 </div>
               }
             </div>
           }
         </span>
+      </div>
+
+      <br /><br /><br />
+      <hr />
+      <h1>About</h1>
+      <b>File Stream Handling is a project to control file uploading and downloading which can be pause and resumed at
+            any point of time. Effective in handling large Data file streaming.</b><br />
+      <a href="https://github.com/genialkartik/FileStream-handling" rel="noopener noreferrer" target="_blank">
+        <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2016%2F04%2FGithub-PNG-Image.png&f=1&nofb=1" alt="" srcset="" width="90" height="90" />
+      </a>
+      <h2>Major Tech Stacks used:</h2>
+      <ul>
+        <li>ReactJS</li>
+        <li>Socket.io</li>
+        <li>NodeJS + ExpressJS</li>
+        <li>file-handling (using fs module)</li>
+      </ul>
+
+      <h2>Note: </h2>
+      <li>This Project is a continuation of an Industrial task by [Altan](https://atlan.com/).</li>
+      <li>There now flow of Database throughout the project. Everything is running on Server Locally (for the time being).</li>
+      <li>Future updated will include a lot of stuffs like uploading data into Database (MongoDB), use of GridFS to create small buffers of a single large file, NPM package module, etc.</li>
+      <br /><br />
+      <hr />
+      <div class="flowchart">
+        <h1>Flow Chart:</h1>
+        <div class="mxgraph" style={{maxWidth:'100%'}}>
+          <img src="./FileStreamHandling.png" alt="flowchart" />
+        </div>
       </div>
     </div>
   );
